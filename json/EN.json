@@ -1,5 +1,46 @@
 {
 "content": [
+	{	"slug": "mazerace-game",
+		"jaar": "2024",
+		"preview_img_url": "mazerace-game-preview.jpg",
+		"tumbnail_img_url": "mazerace-game-tumbnail.jpg",
+		"categorie": "GAME",
+		"titel": "MAZERACE",
+		"gemaakt_door": "Dylan Wintermans",
+		"taal": "PYTHON",
+		"omschrijving": "Embark on an epic local multiplayer game with MazeRace! Challenge a friend to a head-to-head race through 12  unique mazes, each presenting different challenges. Choose from 24 distinctive skins to personalize your character and race to victory. Be the first to conquer the finish line three times to claim ultimate victory.",
+		"images": [
+			{
+				"img_url": "start_screen.jpg",
+				"desc": "Startup screen"
+				
+			},{
+				"img_url": "end_screen.jpg",
+				"desc": "End screen"
+				
+			},{
+				"img_url": "cosmetics.jpg",
+				"desc": "Cosmetics"
+				
+			},{
+				"img_url": "level_preview_1.jpg",
+				"desc": "Levels 1-6"
+				
+			}, 
+			{
+				"img_url": "level_preview_2.jpg",
+				"desc": "Levels 7-12"
+			}, 
+			{
+				"img_url": "level_5.jpg",
+				"desc": "Level 5"
+			}, 
+			{
+				"img_url": "level_10.jpg",
+				"desc": "Level 10"
+			}
+		]	
+	},
 	{	"slug": "benphase-website",
 		"jaar": "2023",
 		"preview_img_url": "benphase-website-preview.jpg",
