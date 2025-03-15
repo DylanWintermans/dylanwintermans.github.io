@@ -57,8 +57,8 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled"><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 1074px 20px; cursor: pointer;" onclick="lan_nl()">Nederlands</a>
-				</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 1074px 20px; cursor: pointer;" onclick="lan_en()">English</a>
+            <ul class="u-nav u-unstyled"><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 1074px 20px; cursor: pointer;" onclick="setLanguage('nl')">Nederlands</a>
+				</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 1074px 20px; cursor: pointer;" onclick="setLanguage('en')">English</a>
 				</li></ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse">
@@ -66,8 +66,8 @@
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close"></div>
                 <ul class="u-align-center u-custom-font u-font-roboto u-nav u-popupmenu-items u-spacing-0 u-unstyled u-nav-2">
-				<li class="u-nav-item"><a class="u-button-style u-nav-link" style="cursor: pointer;" onclick="lan_nl()">Nederlands</a>
-					</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="cursor: pointer;" onclick="lan_en()">English</a>
+				<li class="u-nav-item"><a class="u-button-style u-nav-link" style="cursor: pointer;" onclick="setLanguage('nl')">Nederlands</a>
+					</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="cursor: pointer;" onclick="setLanguage('en')">English</a>
 					</li></ul>
               </div>
             </div>
@@ -77,50 +77,18 @@
       </div>
 	</header>
 	
-	  <script>		
-		function lan_nl() {
-		  document.cookie = "language=NL;";
-		  location.reload();
+	<script>		
+		function setLanguage(lang) {
+			document.cookie = "language=" + lang + ";";
+			location.reload();
 		}
-	
-		function lan_en() {
-		  document.cookie = "language=EN;";
-		  location.reload();
-		}
-	</script>
-	
-	<script>
+
 		//get slug from URL
 		var slug = window.location.href.split('/').pop()
 		slug = slug.replace("project.html?=", "");
 
-		//Check language
-		value_or_null = (document.cookie.match(/^(?:.*;)?\s*language\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
-
-		if (value_or_null == null || value_or_null == 'NL'){
-			var language = 'json/NL.json';
-			var	en_nl_gemaakt_door = '<b>Gemaakt door: </b>';
-			var	en_nl_taal = '<b>Taal: </b>';
-			var	en_nl_omschrijving = '<b>Omschrijving: </b>';
-		} else {
-			var language = 'json/EN.json';
-			var	en_nl_gemaakt_door = '<b>Made by: </b>';
-			var	en_nl_taal = '<b>Languages: </b>';
-			var	en_nl_omschrijving = '<b>Description: </b>';
-		} 
-		
-		//underline nav-items with page language
-		var menu_items = document.querySelectorAll(".u-nav-item");
-		menu_items.forEach(function(menu_item) {
-		  var text = menu_item.querySelector(".u-nav-link").innerText;
-		  if ((value_or_null == null && text == "Nederlands") || value_or_null == "NL" && text == "Nederlands" || value_or_null == "EN" && text == "English") {
-			menu_item.querySelector(".u-nav-link").style.textDecoration = "underline";
-		  }
-		});
-		
-
-		// Check if slug exists
-		$.getJSON(language, function (data) {
+		// check if slug exists in json
+		$.getJSON('json/content.json', function (data) {
 			var found = false;
 			for (var i = 0; i < data.content.length; i++) {
 			  if (data.content[i].slug === slug) {
@@ -133,34 +101,48 @@
 			  window.location.replace("index.html");
 			}
 		});
+		
+		var language = (document.cookie.match(/^(?:.*;)?\s*language\s*=\s*([^;]+)(?:.*)?$/) || [null, 'nl'])[1];
+
+		//underline nav-items with page language
+		document.querySelectorAll(".u-nav-item").forEach(function(menu_item) {
+			var text = menu_item.querySelector(".u-nav-link").innerText;
+			if ((language === 'nl' && text === "Nederlands") || (language === 'en' && text === "English")) {
+				menu_item.querySelector(".u-nav-link").style.textDecoration = "underline";
+			}
+		});
+		
+		var en_nl_made_by = language === 'nl' ? '<b>Gemaakt door: </b>' : '<b>Made by: </b>';
+		var en_nl_language = language === 'nl' ? '<b>Taal: </b>' : '<b>Languages: </b>';
+		var en_nl_description = language === 'nl' ? '<b>Omschrijving: </b>' : '<b>Description: </b>';
 
 		////////////////////////////////////////////////////////////////////////////////
 
 		$(document).ready(function () {
-			$.getJSON(language, function (data) {
+			$.getJSON('json/content.json', function (data) {
 				var content = data.content.filter(function (obj) {
 					return obj.slug == slug;
 				});
 				
-				var jaar_html = '';
-				var cat_titel_html = '';
+				var year_html = '';
+				var cat_title_html = '';
 				var information_html = '';
 				var tumbnail_html = '';
 				
 				$.each(content, function (key, value) {
 
-					jaar_html += value.jaar;
-					cat_titel_html += value.categorie + '<br>' + value.titel;
+					year_html += value.year;
+					cat_title_html += value.category + '<br>' + value.title;
 					tumbnail_html += '<img class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xs u-image u-image-contain u-image-default u-image-1" src="images/' + slug + '/' + value.tumbnail_img_url + '" alt="" data-image-width="1920" data-image-height="1080">';
 
-					information_html += '<b>' + en_nl_gemaakt_door + '</b>' + value.gemaakt_door + '<br>';
-					information_html += '<br><b>' + en_nl_taal + '</b>' + value.taal + '<br>';
-					information_html += '<br><b>' + en_nl_omschrijving + '</b>' + value.omschrijving + '<br>';
+					information_html += '<b>' + en_nl_made_by + '</b>' + value.made_by + '<br>';
+					information_html += '<br><b>' + en_nl_language + '</b>' + value.language + '<br>';
+					information_html += '<br><b>' + en_nl_description + '</b>' + value.description[language] + '<br>';
 
 				});
 				
-				$('#jaar').html(jaar_html);
-				$('#cat_titel').html(cat_titel_html);
+				$('#year').html(year_html);
+				$('#cat_title').html(cat_title_html);
 				$('#information').html(information_html);
 				$('#tumbnail').html(tumbnail_html);
 				
@@ -170,10 +152,10 @@
 	
     <section class="u-clearfix u-section-1" id="sec-54c1">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-align-center u-custom-font u-text u-text-custom-color-4 u-text-font u-text-1" id="jaar"></p>
+        <p class="u-align-center u-custom-font u-text u-text-custom-color-4 u-text-font u-text-1" id="year"></p>
         <div class="u-border-2 u-border-custom-color-3 u-line u-line-horizontal u-line-1"></div>
         <div class="u-border-2 u-border-custom-color-3 u-line u-line-horizontal u-line-2"></div>
-        <h1 class="u-align-center u-custom-font u-font-open-sans u-hover-feature u-text u-text-custom-color-4 u-text-2 hovercolor" id="cat_titel"></h1>
+        <h1 class="u-align-center u-custom-font u-font-open-sans u-hover-feature u-text u-text-custom-color-4 u-text-2 hovercolor" id="cat_title"></h1>
         <span id="tumbnail"></span>
       </div>
     </section>
@@ -201,7 +183,7 @@
           <div class="u-carousel-inner u-gallery-inner" role="listbox" id="gallery">			
 			<script>
 			  $(document).ready(function () {
-				$.getJSON(language, function (data) {
+				$.getJSON('json/content.json', function (data) {
 				  var content = data.content.filter(function (obj) {
 					return obj.slug == slug;
 				  });
@@ -227,7 +209,7 @@
 					  add_html += '</div>';
 					  add_html += '<div class="u-over-slide u-over-slide-1">';
 					  add_html += '<h3 class="u-align-center u-custom-font u-gallery-heading u-text-font" style="font-size: 12px; margin-bottom: 10px; margin-top: 10px;">' + imageCount + ' / ' + totalImages + '</h3>';
-					  add_html += '<p class="u-align-center u-gallery-text">' + image.desc + '</p>';
+					  add_html += '<p class="u-align-center u-gallery-text">' + image.description[language] + '</p>';
 					  add_html += '</div>';
 					  add_html += '</div>';
 					});
@@ -263,7 +245,7 @@
 
 	<script>
 		$(document).ready(function () {
-			$.getJSON(language, function (data) {
+			$.getJSON('json/content.json', function (data) {
 				var content = data.content.filter(function (obj) {
 					return obj.slug == slug;
 				});
@@ -315,7 +297,7 @@
 	var vorigeButton = document.getElementById('vorige-button');
 
 	// Update the button text based on the language variable
-	if (language == 'json/NL.json') {
+	if (language == 'nl') {
 		volgendeButton.textContent = 'Volgende';
 		vorigeButton.textContent = 'Vorige';
 		document.getElementById('u-section').className = 'u-clearfix u-section-4';
@@ -327,7 +309,7 @@
 
 	function NextProject() {
 		const currentSlug = slug;
-		const contentPromise = fetch(language)
+		const contentPromise = fetch('json/content.json')
 		  .then(response => response.json())
 		  .then(data => data.content);
 
@@ -343,7 +325,7 @@
 
 	function PreviousProject() {
 		const currentSlug = slug;
-		const contentPromise = fetch(language)
+		const contentPromise = fetch('json/content.json')
 		  .then(response => response.json())
 		  .then(data => data.content);
 

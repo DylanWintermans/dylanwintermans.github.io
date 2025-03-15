@@ -57,8 +57,8 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled"><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 1074px 20px; cursor: pointer;" onclick="lan_nl()">Nederlands</a>
-				</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 1074px 20px; cursor: pointer;" onclick="lan_en()">English</a>
+            <ul class="u-nav u-unstyled"><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 1074px 20px; cursor: pointer;" onclick="setLanguage('nl')">Nederlands</a>
+				</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 1074px 20px; cursor: pointer;" onclick="setLanguage('en')">English</a>
 				</li></ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse">
@@ -66,8 +66,8 @@
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close"></div>
                 <ul class="u-align-center u-custom-font u-font-roboto u-nav u-popupmenu-items u-spacing-0 u-unstyled u-nav-2">
-				<li class="u-nav-item"><a class="u-button-style u-nav-link" style="cursor: pointer;" onclick="lan_nl()">Nederlands</a>
-					</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="cursor: pointer;" onclick="lan_en()">English</a>
+				<li class="u-nav-item"><a class="u-button-style u-nav-link" style="cursor: pointer;" onclick="setLanguage('nl')">Nederlands</a>
+					</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="cursor: pointer;" onclick="setLanguage('en')">English</a>
 					</li></ul>
               </div>
             </div>
@@ -76,18 +76,6 @@
         </nav>
       </div>
 	</header>
-	  
-	  <script>		
-		function lan_nl() {
-		  document.cookie = "language=NL;";
-		  location.reload();
-		}
-	
-		function lan_en() {
-		  document.cookie = "language=EN;";
-		  location.reload();
-		}
-	</script>
 	
     <section class="u-clearfix u-section-1" id="sec-3eef">
       <div class="u-clearfix u-image u-image-default u-sheet u-image-1" data-image-width="4000" data-image-height="1526">
@@ -106,25 +94,23 @@
           <div class="u-repeater u-repeater-1" id="content">
             
 			<script>
+				function setLanguage(lang) {
+					document.cookie = "language=" + lang + ";";
+					location.reload();
+				}
+		
 				$(document).ready(function () {					
-					value_or_null = (document.cookie.match(/^(?:.*;)?\s*language\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
-					
-					if (value_or_null == null || value_or_null == 'NL'){
-						var language = 'json/NL.json';		
-					} else {
-						var language = 'json/EN.json';
-					} 
+					var language = (document.cookie.match(/^(?:.*;)?\s*language\s*=\s*([^;]+)(?:.*)?$/) || [null, 'nl'])[1];
 					
 					//underline nav-items with page language
-					var menu_items = document.querySelectorAll(".u-nav-item");
-					menu_items.forEach(function(menu_item) {
-					  var text = menu_item.querySelector(".u-nav-link").innerText;
-					  if ((value_or_null == null && text == "Nederlands") || value_or_null == "NL" && text == "Nederlands" || value_or_null == "EN" && text == "English") {
-						menu_item.querySelector(".u-nav-link").style.textDecoration = "underline";
-					  }
+					document.querySelectorAll(".u-nav-item").forEach(function(menu_item) {
+						var text = menu_item.querySelector(".u-nav-link").innerText;
+						if ((language === 'nl' && text === "Nederlands") || (language === 'en' && text === "English")) {
+							menu_item.querySelector(".u-nav-link").style.textDecoration = "underline";
+						}
 					});
 
-					$.getJSON(language, function (data) {
+					$.getJSON('json/content.json', function (data) {
 						var add_html = '';
 						
 						$.each(data.content, function (key, value) {
@@ -135,7 +121,7 @@
 										add_html += '<div class="u-container-layout u-container-layout-2">';
 											add_html += '<div class="u-align-center u-container-style u-custom-color-1 u-group u-radius-10 u-shape-round u-group-2" style="border: 1px solid black; border-radius:10px;">';
 												add_html += '<div class="u-container-layout u-valign-middle-lg u-valign-middle-md u-valign-middle-xl u-container-layout-3">';
-													add_html += '<p class="u-text u-text-1"><b>' + value.categorie + '</b><br>' + value.titel + '<br><i style="text-transform:uppercase;">' + value.taal + '</i></p>';
+													add_html += '<p class="u-text u-text-1"><b>' + value.category + '</b><br>' + value.title + '<br><i style="text-transform:uppercase;">' + value.language + '</i></p>';
 												add_html += '</div>';
 											add_html += '</div>';
 										add_html += '</div>';
