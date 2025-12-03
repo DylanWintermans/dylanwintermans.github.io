@@ -350,6 +350,10 @@
 }
 /* ------------------------------------------------------------------------------ */
 
+.mail-hover:hover {
+  text-decoration: underline; 
+}
+
 .fr-clearfix::after {
   clear: both;
   display: block;
@@ -42397,7 +42401,7 @@ a.u-link.u-text-hover-grey-90:hover {
   min-height: 16px;
   width: 332px;
   min-width: 248px;
-  margin: 103px auto -22px;
+  margin: 50px auto -22px;
 }
 
 .u-footer .u-icon-1 {
